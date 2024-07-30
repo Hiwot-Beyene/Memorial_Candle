@@ -21,10 +21,10 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
-          labelText: hintText, // Use labelText instead of hintText
+          labelText: hintText, 
           labelStyle: TextStyle(color: Colors.white),
           floatingLabelBehavior:
-              FloatingLabelBehavior.auto, // Control label float behavior
+              FloatingLabelBehavior.auto,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(10),

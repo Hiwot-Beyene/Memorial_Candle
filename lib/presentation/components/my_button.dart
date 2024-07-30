@@ -13,8 +13,8 @@ class MyButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(horizontal: 25),
-        width: 400, // Adjust the width as needed
-        height: 50, // Adjust the height as needed
+        width: 400, 
+        height: 50, 
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 190, 22, 44),
           borderRadius: BorderRadius.circular(16),
