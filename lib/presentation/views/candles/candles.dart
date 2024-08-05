@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:lightforisrael/data/services/data_service.dart'; 
-import 'package:lightforisrael/presentation/views/candles/details_candle.dart'; 
-import 'package:lightforisrael/presentation/widgets/image_carousel.dart'; 
+import 'package:lightforisrael/data/services/data_service.dart';
+import 'package:lightforisrael/presentation/views/candles/details_candle.dart';
+import 'package:lightforisrael/presentation/widgets/image_carousel.dart';
 
-class CandlesView extends StatelessWidget {
+class CandlesView extends StatefulWidget {
+  @override
+  State<CandlesView> createState() => _CandlesViewState();
+}
+
+class _CandlesViewState extends State<CandlesView> {
   Future<List<dynamic>> fetchData() async {
-    return await loadJsonData(); 
+    return await loadJsonData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       backgroundColor: Colors.black,
       body: FutureBuilder<List<dynamic>>(
         future: fetchData(),
@@ -50,22 +54,34 @@ class CandlesView extends StatelessWidget {
   }
 }
 
-class CandleItemCard extends StatelessWidget {
+class CandleItemCard extends StatefulWidget {
   final dynamic item;
 
   CandleItemCard({required this.item});
 
   @override
+  State<CandleItemCard> createState() => _CandleItemCardState();
+}
+
+class _CandleItemCardState extends State<CandleItemCard> {
+  bool _isFavorite = false;
+
+  void _toggleFavorite() {
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-          vertical: 10.0, horizontal: 10.0),
+      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailCandlesView(item: item),
+              builder: (context) => DetailCandlesView(item: widget.item),
             ),
           );
         },
@@ -104,7 +120,7 @@ class CandleItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item['personName'],
+                          widget.item['personName'],
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -117,17 +133,17 @@ class CandleItemCard extends StatelessWidget {
                             Icon(Icons.cake, color: Colors.white),
                             SizedBox(width: 4.0),
                             Text(
-                              'Birthdate: ${item['birthdate']}',
+                              'Born: ${widget.item['birthdate']}',
                               style: TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            Icon(Icons.event, color: Colors.white),
+                            Icon(Icons.event),
                             SizedBox(width: 4.0),
                             Text(
-                              'Deathday: ${item['deathday']}',
+                              'Died: ${widget.item['deathday']}',
                               style: TextStyle(color: Colors.white),
                             ),
                           ],
@@ -139,7 +155,7 @@ class CandleItemCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(
-                      item['imgUrl'],
+                      widget.item['imgUrl'],
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
@@ -149,12 +165,36 @@ class CandleItemCard extends StatelessWidget {
               ),
               SizedBox(height: 8.0),
               Text(
-                item['description'],
+                widget.item['description'],
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.white),
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height:1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.favorite,
+                      color: _isFavorite ? Colors.red : Colors.white,
+                    ),
+                    onPressed: _toggleFavorite,
+                  ),
+                  SizedBox(width: 20),
+                  IconButton(
+                      icon: Icon(
+                        Icons.share,
+                        color: Colors.blue,
+                      ),
+                      onPressed: () {}),
+                  SizedBox(width: 20),
+                ],
+              ),
+              SizedBox(
+                height: 4.0,
+              )
             ],
           ),
         ),

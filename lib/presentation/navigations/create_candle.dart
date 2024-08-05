@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lightforisrael/presentation/views/create/create_candle_popup.dart';
+import 'package:lightforisrael/presentation/views/create/pop.dart';
 import 'package:lightforisrael/presentation/views/create/create_candles.dart';
 
 class CreateCandle extends StatefulWidget {
@@ -17,17 +17,17 @@ class CreateCandleState extends State<CreateCandle> {
     return Navigator(
       key: CreateCandleKey,
       onGenerateRoute: (RouteSettings settings) {
-        if (settings.name == '/createPopup') {
+        if (settings.name == '/createcandles') {
           // Show the popup dialog
           WidgetsBinding.instance.addPostFrameCallback((_) {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return CreatePopup();
+                return CreateCandle();
               },
             );
           });
-          return null; // Return null to prevent navigation
+          return null; 
         }
       
         return MaterialPageRoute(

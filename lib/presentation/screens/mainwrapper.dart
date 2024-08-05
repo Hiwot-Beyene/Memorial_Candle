@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:lightforisrael/presentation/navigations/create_candle.dart';
 import 'package:lightforisrael/presentation/navigations/candles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lightforisrael/presentation/screens/my_candles.dart';
+import 'package:lightforisrael/presentation/views/create/create_candles.dart';
+import 'package:lightforisrael/presentation/views/mycandles/my_candles.dart';
 
 class MainWrapper extends StatefulWidget {
   const MainWrapper({super.key});
@@ -28,7 +29,7 @@ class MainWrapperState extends State<MainWrapper> {
       return false;
     } else {
       SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
-      return true; 
+      return true;
     }
   }
 
@@ -36,7 +37,6 @@ class MainWrapperState extends State<MainWrapper> {
     try {
       await FirebaseAuth.instance.signOut();
     } catch (e) {
-     
       print('Sign out error: $e');
     }
   }
@@ -46,12 +46,10 @@ class MainWrapperState extends State<MainWrapper> {
     return WillPopScope(
       onWillPop: _systemBackButtonPressed,
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(
-              18, 18, 18, 1), 
+        backgroundColor: const Color.fromRGBO(18, 18, 18, 1),
         appBar: AppBar(
           title: const Text('Light For Israel'),
-          backgroundColor: const Color.fromRGBO(
-              18, 18, 18, 1), 
+          backgroundColor: const Color.fromRGBO(18, 18, 18, 1),
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
@@ -66,11 +64,9 @@ class MainWrapperState extends State<MainWrapper> {
             });
           },
           currentIndex: _selectedIndex,
-          backgroundColor: const Color.fromRGBO(
-              18, 18, 18, 1), 
-          selectedItemColor:
-              const Color.fromARGB(255, 53, 80, 103),
-          unselectedItemColor: Colors.white, 
+          backgroundColor: const Color.fromRGBO(18, 18, 18, 1),
+          selectedItemColor: const Color.fromARGB(255, 53, 80, 103),
+          unselectedItemColor: Colors.white,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.candlestick_chart),
@@ -99,11 +95,11 @@ class MainWrapperState extends State<MainWrapper> {
                 Candles(),
 
                 /// Second Route
-                CreateCandle(),
-                
+                CreateCandles(),
+
                 // thrird route
 
-                MyCandlesScreen()
+                MyCandles()
               ],
             ),
           ),

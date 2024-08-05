@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CreatePopup extends StatelessWidget {
+class LightCandlePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Create Candle'),
+      title: Text('Light Candle'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -24,7 +24,7 @@ class CreatePopup extends StatelessWidget {
            
             Navigator.of(context).pop();
           },
-          child: Text('Create'),
+          child: Text('Send'),
         ),
       ],
     );
