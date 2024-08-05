@@ -24,7 +24,7 @@ class CustomTextField extends StatelessWidget {
           labelText: hintText, 
           labelStyle: TextStyle(color: Colors.white),
           floatingLabelBehavior:
-              FloatingLabelBehavior.auto,
+              FloatingLabelBehavior.auto, 
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(10),

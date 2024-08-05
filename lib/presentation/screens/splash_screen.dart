@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:blur/blur.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lightforisrael/presentation/components/my_button.dart';
+import 'package:lightforisrael/presentation/widgets/my_button.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'assets/splash.jpeg', // Add your image asset here
+              'assets/splash.jpeg', 
               fit: BoxFit.cover,
             ),
           ),
@@ -20,13 +20,13 @@ class SplashScreen extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 350, // Adjust the height of the blurry section as needed
+              height: 350, 
               width: double.infinity,
               child: Stack(
                 children: [
                   Blur(
                     blur: 4,
-                    blurColor: const Color.fromARGB(255, 209, 59, 59),
+                    blurColor:Colors.black,
                     colorOpacity: 0.1,
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(40),

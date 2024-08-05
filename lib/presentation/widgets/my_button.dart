@@ -4,7 +4,7 @@ class MyButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonText;
 
-  MyButton({super.key, required this.onTap, required this.buttonText});
+  MyButton({super.key, required this.onTap, required this.buttonText, Color? buttonColor});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class MyButton extends StatelessWidget {
         width: 400, 
         height: 50, 
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 190, 22, 44),
+          color: Color.fromARGB(255, 53, 80, 103),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Center(

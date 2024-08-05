@@ -1,35 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lightforisrael/presentation/screens/login_page.dart';
-import 'package:lightforisrael/presentation/screens/signup_page.dart';
-import 'package:lightforisrael/presentation/screens/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:lightforisrael/presentation/themes/my_app_theme.dart';
+import 'firebase_options.dart';
+import 'presentation/router/app_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final GoRouter router = GoRouter(
-      initialLocation: '/splash1',
-      routes: [
-        GoRoute(
-          path: '/splash1',
-          builder: (context, state) => SplashScreen(),
-        ),
-        GoRoute(
-          path: '/login',
-          builder: (context, state) => LoginPage(),
-        ),
-        GoRoute(
-          path: '/signup',
-          builder: (context, state) => SignUpPage(),
-        ),
-      ],
-    );
-
+    final GoRouter router = createRouter();
     return MaterialApp.router(
+      theme: MyAppThemes.darkTheme,
       debugShowCheckedModeBanner: false,
       routerConfig: router,
     );
