@@ -8,7 +8,7 @@ class CreatePopup extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Enter details to create a new candle.'),
+          Text('Are you sure?'),
          
         ],
       ),

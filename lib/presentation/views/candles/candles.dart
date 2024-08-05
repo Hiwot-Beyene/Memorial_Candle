@@ -11,6 +11,7 @@ class CandlesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       backgroundColor: Colors.black,
       body: FutureBuilder<List<dynamic>>(
         future: fetchData(),
@@ -91,7 +92,7 @@ class CandleItemCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(
-                      'assets/candle.jpg',
+                      'assets/candle.gif',
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,

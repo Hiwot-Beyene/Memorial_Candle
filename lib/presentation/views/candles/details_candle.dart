@@ -13,13 +13,13 @@ class DetailCandlesView extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+    //  backgroundColor: Colors.black,
       appBar: AppBar(
+      
         title: Text(
-          item['title'] ?? 'Details',
-          style: TextStyle(color: Color.fromARGB(255, 59, 57, 57)),
+          item['title'] ?? 'Details'
         ),
-        backgroundColor: Colors.white,
+        
         leading: IconButton(
           icon:
               Icon(Icons.arrow_back, color: Color.fromARGB(255, 128, 128, 128)),
@@ -36,7 +36,7 @@ class DetailCandlesView extends StatelessWidget {
             children: [
               AspectRatio(
                 aspectRatio: 16 / 9, 
-                child: Image.asset('assets/candle.jpg', fit: BoxFit.cover),
+                child: Image.asset('assets/candle.gif', fit: BoxFit.contain),
               ),
               SizedBox(height: screenWidth * 0.04),
               Container(
@@ -52,7 +52,7 @@ class DetailCandlesView extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.person, size: screenWidth * 0.06),
+                              Icon(Icons.person, size: screenWidth * 0.06,color: Colors.white,),
                               SizedBox(width: screenWidth * 0.02),
                               Expanded(
                                 child: Text(
@@ -68,7 +68,7 @@ class DetailCandlesView extends StatelessWidget {
                           SizedBox(height: screenWidth * 0.02),
                           Row(
                             children: [
-                              Icon(Icons.cake, size: screenWidth * 0.06),
+                              Icon(Icons.cake, size: screenWidth * 0.06,color: Colors.white,),
                               SizedBox(width: screenWidth * 0.02),
                               Expanded(
                                 child: Text(
@@ -83,7 +83,7 @@ class DetailCandlesView extends StatelessWidget {
                           Row(
                             children: [
                               Icon(Icons.highlight_off,
-                                  size: screenWidth * 0.06),
+                                  size: screenWidth * 0.06,color: Colors.white,),
                               SizedBox(width: screenWidth * 0.02),
                               Expanded(
                                 child: Text(
