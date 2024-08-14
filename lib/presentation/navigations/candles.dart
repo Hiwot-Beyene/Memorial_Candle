@@ -21,7 +21,6 @@ class CandlesState extends State<Candles> {
 
         switch (settings.name) {
           case "/detailsCandles":
-            // Pass the item to DetailCandlesView
             if (args != null) {
               return MaterialPageRoute(
                 settings: settings,

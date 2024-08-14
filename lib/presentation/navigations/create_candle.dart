@@ -1,38 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:lightforisrael/presentation/views/create/pop.dart';
 import 'package:lightforisrael/presentation/views/create/create_candles.dart';
 
-class CreateCandle extends StatefulWidget {
-  const CreateCandle({super.key});
+class CreateCandlesNavigator extends StatefulWidget {
+  const CreateCandlesNavigator({super.key});
 
   @override
-  CreateCandleState createState() => CreateCandleState();
+  State<CreateCandlesNavigator> createState() => _CreateCandlesNavigatorState();
 }
+GlobalKey<NavigatorState> CreateCandlesNavigatorKey = GlobalKey<NavigatorState>();
 
-GlobalKey<NavigatorState> CreateCandleKey = GlobalKey<NavigatorState>();
-
-class CreateCandleState extends State<CreateCandle> {
+class _CreateCandlesNavigatorState extends State<CreateCandlesNavigator> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      key: CreateCandleKey,
+      key: CreateCandlesNavigatorKey,
       onGenerateRoute: (RouteSettings settings) {
-        if (settings.name == '/createcandles') {
-          // Show the popup dialog
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return CreateCandle();
-              },
-            );
-          });
-          return null; 
-        }
-      
         return MaterialPageRoute(
           settings: settings,
-          builder: (BuildContext context) => CreateCandles(),
+          builder: (BuildContext context) =>  CreateCandles(),
         );
       },
     );

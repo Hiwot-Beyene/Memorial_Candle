@@ -75,6 +75,7 @@ class _DetailCandlesViewState extends State<DetailCandlesView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 8,),
                         Row(
                           children: [
                             Icon(

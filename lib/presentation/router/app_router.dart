@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lightforisrael/presentation/screens/auth_page.dart';
 import 'package:lightforisrael/presentation/screens/home_page.dart';
 import 'package:lightforisrael/presentation/screens/my_candles.dart';
+import 'package:lightforisrael/presentation/screens/profile.dart';
 import 'package:lightforisrael/presentation/screens/signup_page.dart';
 import 'package:lightforisrael/presentation/screens/splash_screen.dart';
 
@@ -22,11 +23,14 @@ GoRouter createRouter() {
         path: '/signup',
         builder: (context, state) => SignUpPage(),
       ),
-        GoRoute(
-      path: '/home',
-      builder: (context, state) =>HomePage(),
-    ),
-    
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => HomePage(),
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => ProfilePage(),
+      ),
     ],
   );
 }

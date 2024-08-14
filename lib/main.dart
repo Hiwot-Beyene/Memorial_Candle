@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+// ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lightforisrael/presentation/themes/my_app_theme.dart';
 import 'firebase_options.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final GoRouter router = createRouter();
     return MaterialApp.router(
-      theme: MyAppThemes.darkTheme,
+      theme:appTheme,
       debugShowCheckedModeBanner: false,
       routerConfig: router,
     );

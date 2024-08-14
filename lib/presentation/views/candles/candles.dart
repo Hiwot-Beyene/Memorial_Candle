@@ -88,7 +88,11 @@ class _CandleItemCardState extends State<CandleItemCard> {
         child: Container(
           padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 53, 80, 103),
+            gradient: LinearGradient(
+              colors: [Color(0xFF295270), Color(0xFF524175)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
             borderRadius: BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
@@ -170,10 +174,9 @@ class _CandleItemCardState extends State<CandleItemCard> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.white),
               ),
-              SizedBox(height:1),
+              SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   IconButton(
                     icon: Icon(
@@ -182,14 +185,13 @@ class _CandleItemCardState extends State<CandleItemCard> {
                     ),
                     onPressed: _toggleFavorite,
                   ),
-                  SizedBox(width: 20),
                   IconButton(
-                      icon: Icon(
-                        Icons.share,
-                        color: Colors.blue,
-                      ),
-                      onPressed: () {}),
-                  SizedBox(width: 20),
+                    icon: Icon(
+                      Icons.share,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {},
+                  ),
                 ],
               ),
               SizedBox(

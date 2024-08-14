@@ -8,7 +8,7 @@ class AuthService {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        return null; // User cancelled the sign-in
+        return null; 
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -22,7 +22,6 @@ class AuthService {
           await FirebaseAuth.instance.signInWithCredential(credential);
       return userCredential.user;
     } catch (e) {
-      // print('Error signing in with Google: $e');
       throw e;
     }
   }
