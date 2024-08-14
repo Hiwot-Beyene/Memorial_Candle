@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lightforisrael/presentation/screens/auth_page.dart';
-import 'package:lightforisrael/presentation/screens/home_page.dart';
+import 'package:lightforisrael/presentation/screens/mainwrapper.dart';
 import 'package:lightforisrael/presentation/screens/my_candles.dart';
 import 'package:lightforisrael/presentation/screens/profile.dart';
 import 'package:lightforisrael/presentation/screens/signup_page.dart';
@@ -25,7 +25,7 @@ GoRouter createRouter() {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => HomePage(),
+        builder: (context, state) => MainWrapper(),
       ),
       GoRoute(
         path: '/profile',

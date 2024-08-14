@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lightforisrael/presentation/screens/profile.dart';
-import 'confirmation_dialog.dart'; 
+import 'confirmation_dialog.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Future<void> signUserOut() async {
     try {
       await FirebaseAuth.instance.signOut();
-      GoRouter.of(context).go('/login'); 
+      GoRouter.of(context).go('/login');
     } catch (e) {
       print('Sign out error: $e');
     }
@@ -27,7 +27,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
 
     if (shouldLogout == true) {
+      
       await signUserOut();
+
+      // Navigate to the login page
+      GoRouter.of(context).go('/login');
     }
   }
 
@@ -43,8 +47,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           DrawerHeader(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/candle.jpg'), 
+                image: AssetImage('assets/candle.jpg'),
                 fit: BoxFit.cover,
               ),
               boxShadow: [
@@ -52,7 +55,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   color: Colors.black.withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 10,
-                  offset: Offset(0, 3), 
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
@@ -81,17 +84,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           if (user != null) ...[
             ListTile(
-              leading: Icon(Icons.favorite,
-                  color: Theme.of(context).iconTheme.color),
-              title: Text('My Donates',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Theme.of(context).iconTheme.color)),
-              onTap: () {
-                GoRouter.of(context).go('/login');
-              }
-            ),
+                leading: Icon(Icons.favorite,
+                    color: Theme.of(context).iconTheme.color),
+                title: Text('My Donates',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(color: Theme.of(context).iconTheme.color)),
+                onTap: () {
+                  GoRouter.of(context).go('/login');
+                }),
             ListTile(
               leading:
                   Icon(Icons.person, color: Theme.of(context).iconTheme.color),
@@ -116,8 +118,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       .bodyLarge
                       ?.copyWith(color: Theme.of(context).iconTheme.color)),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
-                _handleLogout(); 
+                // Navigator.pop(context); // Close the drawer
+                _handleLogout();
               },
             ),
           ] else ...[

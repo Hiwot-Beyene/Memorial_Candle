@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:lightforisrael/presentation/widgets/my_button.dart';
 
 class CreateCandles extends StatefulWidget {
+  const CreateCandles({super.key});
+
   @override
   _CreateCandlesState createState() => _CreateCandlesState();
 }
@@ -55,7 +57,7 @@ class _CreateCandlesState extends State<CreateCandles> {
               onSurface: Colors.white, // Text color for non-selected dates
             ),
             primaryColor: const Color.fromARGB(255, 53, 80, 103),
-            dialogBackgroundColor: Color.fromRGBO(18, 18, 18, 1),
+            dialogBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
             textTheme: const TextTheme(
               bodyMedium: TextStyle(color: Colors.white), // Date text
               titleMedium: TextStyle(color: Colors.white), // Header text
@@ -63,7 +65,7 @@ class _CreateCandlesState extends State<CreateCandles> {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor:
-                    Color.fromARGB(255, 53, 80, 103), // Cancel/Ok buttons
+                    const Color.fromARGB(255, 53, 80, 103), // Cancel/Ok buttons
               ),
             ),
             buttonTheme: const ButtonThemeData(
@@ -134,7 +136,7 @@ class _CreateCandlesState extends State<CreateCandles> {
                               color: Colors.grey[600], size: 50)
                           : null,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       'Upload Photo',
                       style: TextStyle(
@@ -145,33 +147,33 @@ class _CreateCandlesState extends State<CreateCandles> {
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Name Field
               Theme(
                 data: ThemeData(
                   primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                  textSelectionTheme: TextSelectionThemeData(
-                    cursorColor: const Color.fromARGB(255, 53, 80, 103),
+                  textSelectionTheme: const TextSelectionThemeData(
+                    cursorColor: Color.fromARGB(255, 53, 80, 103),
                   ),
                 ),
                 child: TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Person Name',
-                    labelStyle: TextStyle(
-                      color: const Color.fromARGB(255, 53, 80, 103),
+                    labelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 53, 80, 103),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: const Color.fromARGB(255, 53, 80, 103),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 53, 80, 103),
                       ),
                     ),
                   ),
@@ -186,35 +188,35 @@ class _CreateCandlesState extends State<CreateCandles> {
                   },
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Born Date Picker
               Theme(
                 data: ThemeData(
                   primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                  textSelectionTheme: TextSelectionThemeData(
-                    cursorColor: const Color.fromARGB(255, 53, 80, 103),
+                  textSelectionTheme: const TextSelectionThemeData(
+                    cursorColor: Color.fromARGB(255, 53, 80, 103),
                   ),
                 ),
                 child: TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Born Date',
-                    suffixIcon: Icon(Icons.calendar_today,
-                        color: const Color.fromARGB(255, 53, 80, 103)),
-                    labelStyle: TextStyle(
-                      color: const Color.fromARGB(255, 53, 80, 103),
+                    suffixIcon: const Icon(Icons.calendar_today,
+                        color: Color.fromARGB(255, 53, 80, 103)),
+                    labelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 53, 80, 103),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: const Color.fromARGB(255, 53, 80, 103),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 53, 80, 103),
                       ),
                     ),
                   ),
@@ -227,35 +229,35 @@ class _CreateCandlesState extends State<CreateCandles> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Death Date Picker
               Theme(
                 data: ThemeData(
                   primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                  textSelectionTheme: TextSelectionThemeData(
-                    cursorColor: const Color.fromARGB(255, 53, 80, 103),
+                  textSelectionTheme: const TextSelectionThemeData(
+                    cursorColor: Color.fromARGB(255, 53, 80, 103),
                   ),
                 ),
                 child: TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: 'Death Date',
-                    suffixIcon: Icon(Icons.calendar_today,
-                        color: const Color.fromARGB(255, 53, 80, 103)),
-                    labelStyle: TextStyle(
-                      color: const Color.fromARGB(255, 53, 80, 103),
+                    suffixIcon: const Icon(Icons.calendar_today,
+                        color: Color.fromARGB(255, 53, 80, 103)),
+                    labelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 53, 80, 103),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.grey,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: const Color.fromARGB(255, 53, 80, 103),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 53, 80, 103),
                       ),
                     ),
                   ),
@@ -268,7 +270,7 @@ class _CreateCandlesState extends State<CreateCandles> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Description Field
               Column(
@@ -277,28 +279,28 @@ class _CreateCandlesState extends State<CreateCandles> {
                   Theme(
                     data: ThemeData(
                       primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                      textSelectionTheme: TextSelectionThemeData(
-                        cursorColor: const Color.fromARGB(255, 53, 80, 103),
+                      textSelectionTheme: const TextSelectionThemeData(
+                        cursorColor: Color.fromARGB(255, 53, 80, 103),
                       ),
                     ),
                     child: TextFormField(
                       controller: _descriptionController,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: 'Description',
-                        labelStyle: TextStyle(
-                          color: const Color.fromARGB(255, 53, 80, 103),
+                        labelStyle: const TextStyle(
+                          color: Color.fromARGB(255, 53, 80, 103),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.grey,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: const Color.fromARGB(255, 53, 80, 103),
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 53, 80, 103),
                           ),
                         ),
                       ),

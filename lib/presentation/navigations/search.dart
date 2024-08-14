@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:lightforisrael/presentation/views/mycandles/my_candles.dart';
 import 'package:lightforisrael/presentation/views/search/search.dart';
 
 class SearchNavigator extends StatefulWidget {
