@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lightforisrael/data/services/stripe_service.dart';
 import 'package:lightforisrael/presentation/widgets/message_list.dart';
 import 'package:lightforisrael/presentation/widgets/my_button.dart';
 
@@ -19,7 +20,8 @@ class _DetailCandlesViewState extends State<DetailCandlesView> {
       _isFavorite = !_isFavorite;
     });
   }
-
+  String amount = "5000";
+  String currency = "USD";
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -149,7 +151,10 @@ class _DetailCandlesViewState extends State<DetailCandlesView> {
               SizedBox(height: screenWidth * 0.04),
               MyButton(
                 buttonText: 'Light Candle',
-                onTap: () {},
+                onTap: () {
+                StripeService.instance
+                    .makePayment(context); // Pass the context here
+              },
               ),
               SizedBox(height: screenWidth * 0.04),
               Text('Description',style: TextStyle(fontSize: 18)),
