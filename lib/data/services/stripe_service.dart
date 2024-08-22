@@ -10,11 +10,14 @@ class StripeService {
 
   Future<void> makePayment(BuildContext context) async {
     try {
-      // Get the amount from the user
-      int? amount = await _getAmountFromUser(context);
-      if (amount == null) return;
+      // Get the donator's details from the user
+      Map<String, String>? donorDetails = await _getDonorDetailsFromUser(context);
+      if (donorDetails == null) return;
 
-      // Create the payment intent with the user-specified amount
+      // Set the donation amount to $2
+      int amount = 2;
+
+      // Create the payment intent with the fixed amount
       String? paymentIntentClientSecret = await _createPaymentIntent(
         amount,
         "usd",
@@ -25,7 +28,7 @@ class StripeService {
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntentClientSecret,
-          merchantDisplayName: "Hussain Mustafa",
+          merchantDisplayName: "Light For Israel",
         ),
       );
 
@@ -36,34 +39,55 @@ class StripeService {
     }
   }
 
-  Future<int?> _getAmountFromUser(BuildContext context) async {
-    int? amount;
-    TextEditingController controller = TextEditingController();
+  Future<Map<String, String>?> _getDonorDetailsFromUser(BuildContext context) async {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController wordController = TextEditingController();
+    Map<String, String>? donorDetails;
 
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Enter Payment Amount"),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(hintText: "Enter amount in USD"),
+        title: Text("Donator Details"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                hintText: "Enter your name",
+                labelText: "Name",
+              ),
+            ),
+            TextField(
+              controller: wordController,
+              decoration: InputDecoration(
+                hintText: "Enter a personal word",
+                labelText: "Personal Word",
+              ),
+            ),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () {
-              if (controller.text.isNotEmpty) {
-                amount = int.tryParse(controller.text);
+              if (nameController.text.isNotEmpty && wordController.text.isNotEmpty) {
+                donorDetails = {
+                  "name": nameController.text,
+                  "personalWord": wordController.text,
+                };
               }
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(donorDetails);
             },
-            child: Text("Submit"),
+            child: Text(
+              "Submit",
+              style: TextStyle(color: Colors.blue), // Light text color
+            ),
           ),
         ],
       ),
     );
 
-    return amount;
+    return donorDetails;
   }
 
   Future<String?> _createPaymentIntent(int amount, String currency) async {

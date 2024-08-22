@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lightforisrael/data/services/data_service.dart';
+import 'package:intl/intl.dart';
+import 'package:lightforisrael/data/models/memorial.dart';
+import 'package:lightforisrael/data/services/memorials_service.dart';
 import 'package:lightforisrael/presentation/views/candles/details_candle.dart';
 import 'package:lightforisrael/presentation/widgets/image_carousel.dart';
 
@@ -9,55 +11,107 @@ class CandlesView extends StatefulWidget {
 }
 
 class _CandlesViewState extends State<CandlesView> {
-  Future<List<dynamic>> fetchData() async {
-    return await loadJsonData();
+  late ScrollController _scrollController;
+  List<Memorial> _memorials = [];
+  bool _isLoading = false;
+  int _page = 1;
+  final int _limit = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+    _fetchMemorials();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchMemorials() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      List<Memorial> newMemorials =
+          await MemorialService().fetchMemorials(page: _page, limit: _limit);
+      setState(() {
+        _memorials.addAll(newMemorials);
+        _page++; // Increment page for the next fetch
+      });
+    } catch (e) {
+      print('Failed to load memorials: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoading) {
+      _fetchMemorials();
+    }
+  }
+
+  Future<void> _refreshMemorials() async {
+    setState(() {
+      _memorials.clear();
+      _page = 1;
+    });
+    await _fetchMemorials();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: FutureBuilder<List<dynamic>>(
-        future: fetchData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No Data Found'));
-          } else {
-            return Column(
-              children: [
-                SizedBox(height: 16.0),
-                Container(
-                  height: 230.0,
-                  child: ImageCarousel(),
-                ),
-                SizedBox(height: 16.0),
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.all(8.0),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final item = snapshot.data![index];
-                      return CandleItemCard(item: item);
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-        },
+      body: Column(
+        children: [
+          SizedBox(height: 16.0),
+          Container(
+            height: 230.0,
+            child: ImageCarousel(),
+          ),
+          SizedBox(height: 16.0),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _refreshMemorials,
+              child: ListView.builder(
+                padding: EdgeInsets.all(8.0),
+                controller: _scrollController,
+                itemCount: _memorials.length + (_isLoading ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < _memorials.length) {
+                    Memorial memorial = _memorials[index];
+                    return CandleItemCard(memorial: memorial);
+                  } else if (_isLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return SizedBox(); // Return empty widget when not loading
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class CandleItemCard extends StatefulWidget {
-  final dynamic item;
+  final Memorial memorial;
 
-  CandleItemCard({required this.item});
+  CandleItemCard({required this.memorial});
 
   @override
   State<CandleItemCard> createState() => _CandleItemCardState();
@@ -74,6 +128,7 @@ class _CandleItemCardState extends State<CandleItemCard> {
 
   @override
   Widget build(BuildContext context) {
+    final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: GestureDetector(
@@ -81,7 +136,8 @@ class _CandleItemCardState extends State<CandleItemCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailCandlesView(item: widget.item),
+              builder: (context) =>
+                  DetailCandlesView(memorial: widget.memorial),
             ),
           );
         },
@@ -108,7 +164,6 @@ class _CandleItemCardState extends State<CandleItemCard> {
             children: [
               Row(
                 children: [
-                  SizedBox(height: 25),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(
@@ -124,7 +179,7 @@ class _CandleItemCardState extends State<CandleItemCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.item['personName'],
+                          widget.memorial.personName,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -137,17 +192,17 @@ class _CandleItemCardState extends State<CandleItemCard> {
                             Icon(Icons.cake, color: Colors.white),
                             SizedBox(width: 4.0),
                             Text(
-                              'Born: ${widget.item['birthdate']}',
+                              'Born: ${dateFormat.format(widget.memorial.birthDate)}',
                               style: TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            Icon(Icons.event),
+                            Icon(Icons.event, color: Colors.white),
                             SizedBox(width: 4.0),
                             Text(
-                              'Died: ${widget.item['deathday']}',
+                              'Died: ${dateFormat.format(widget.memorial.deceasedDate)}',
                               style: TextStyle(color: Colors.white),
                             ),
                           ],
@@ -155,11 +210,11 @@ class _CandleItemCardState extends State<CandleItemCard> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 25),
+                  SizedBox(width: 12.0),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      widget.item['imgUrl'],
+                    child: Image.network(
+                      widget.memorial.imageUrl,
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
@@ -169,7 +224,7 @@ class _CandleItemCardState extends State<CandleItemCard> {
               ),
               SizedBox(height: 8.0),
               Text(
-                widget.item['description'],
+                widget.memorial.description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.white),
@@ -194,9 +249,6 @@ class _CandleItemCardState extends State<CandleItemCard> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 4.0,
-              )
             ],
           ),
         ),

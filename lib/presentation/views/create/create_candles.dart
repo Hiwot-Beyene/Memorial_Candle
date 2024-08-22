@@ -1,11 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-
-import 'package:lightforisrael/presentation/widgets/my_button.dart';
+import 'package:lightforisrael/data/services/memorials_service.dart';
 
 class CreateCandles extends StatefulWidget {
-  const CreateCandles({super.key});
+  const CreateCandles({Key? key}) : super(key: key);
 
   @override
   _CreateCandlesState createState() => _CreateCandlesState();
@@ -13,14 +12,15 @@ class CreateCandles extends StatefulWidget {
 
 class _CreateCandlesState extends State<CreateCandles> {
   final _formKey = GlobalKey<FormState>();
-  File? _image;
-  String _name = '';
-  DateTime? _bornDate;
-  DateTime? _deathDate;
-  String _description = '';
+  String? _personName;
+  String? _description;
+  DateTime? _birthDate;
+  DateTime? _deceasedDate;
+  File? _imageFile;
+  final MemorialService _memorialService = MemorialService();
   final _descriptionController = TextEditingController();
-
-  final ImagePicker _picker = ImagePicker();
+  final _birthDateController = TextEditingController();
+  final _deceasedDateController = TextEditingController();
 
   @override
   void initState() {
@@ -33,15 +33,14 @@ class _CreateCandlesState extends State<CreateCandles> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imageFile = pickedFile != null ? File(pickedFile.path) : null;
+    });
   }
 
-  Future<void> _selectDate(BuildContext context, bool isBornDate) async {
+  Future<void> _selectDate(BuildContext context, bool isBirthDate) async {
     final selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -56,8 +55,6 @@ class _CreateCandlesState extends State<CreateCandles> {
               onPrimary: Colors.white, // Text color for selected date
               onSurface: Colors.white, // Text color for non-selected dates
             ),
-            primaryColor: const Color.fromARGB(255, 53, 80, 103),
-            dialogBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
             textTheme: const TextTheme(
               bodyMedium: TextStyle(color: Colors.white), // Date text
               titleMedium: TextStyle(color: Colors.white), // Header text
@@ -85,29 +82,87 @@ class _CreateCandlesState extends State<CreateCandles> {
 
     if (selectedDate != null) {
       setState(() {
-        if (isBornDate) {
-          _bornDate = selectedDate;
+        if (isBirthDate) {
+          _birthDate = selectedDate;
+          _birthDateController.text = '${_birthDate!.toLocal()}'.split(' ')[0];
         } else {
-          _deathDate = selectedDate;
+          _deceasedDate = selectedDate;
+          _deceasedDateController.text =
+              '${_deceasedDate!.toLocal()}'.split(' ')[0];
         }
       });
+    }
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      if (_imageFile == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please select an image')));
+        return;
+      }
+
+      try {
+        await _memorialService.createMemorial(
+          personName: _personName!,
+          description: _description!,
+          birthDate: _birthDate!,
+          deceasedDate: _deceasedDate!,
+          imageFile: _imageFile!,
+        );
+
+        // Show success dialog
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Success'),
+              content: const Text('Memorial has been created successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        ).then((_) {
+          // Reset the form fields
+          setState(() {
+            _formKey.currentState?.reset();
+            _birthDateController.clear();
+            _deceasedDateController.clear();
+            _imageFile = null;
+          });
+        });
+      } catch (error) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $error')));
+      }
     }
   }
 
   @override
   void dispose() {
     _descriptionController.dispose();
+    _birthDateController.dispose();
+    _deceasedDateController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(title: const Text('Create Candle')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
               // Image Picker
               GestureDetector(
@@ -124,14 +179,14 @@ class _CreateCandlesState extends State<CreateCandles> {
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(12),
-                        image: _image != null
+                        image: _imageFile != null
                             ? DecorationImage(
-                                image: FileImage(_image!),
+                                image: FileImage(_imageFile!),
                                 fit: BoxFit.cover,
                               )
                             : null,
                       ),
-                      child: _image == null
+                      child: _imageFile == null
                           ? Icon(Icons.camera_alt,
                               color: Colors.grey[600], size: 50)
                           : null,
@@ -149,190 +204,85 @@ class _CreateCandlesState extends State<CreateCandles> {
               ),
               const SizedBox(height: 16),
 
-              // Name Field
-              Theme(
-                data: ThemeData(
-                  primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                  textSelectionTheme: const TextSelectionThemeData(
-                    cursorColor: Color.fromARGB(255, 53, 80, 103),
-                  ),
+              // Person Name Field
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Person Name',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-                child: TextFormField(
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Person Name',
-                    labelStyle: const TextStyle(
-                      color: Color.fromARGB(255, 53, 80, 103),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 53, 80, 103),
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _name = value ?? '';
-                  },
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter a name' : null,
+                onSaved: (value) => _personName = value,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Birth Date Picker
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Birth Date',
+                  suffixIcon: const Icon(Icons.calendar_today),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
+                readOnly: true,
+                onTap: () => _selectDate(context, true),
+                controller: _birthDateController,
               ),
               const SizedBox(height: 16),
 
-              // Born Date Picker
-              Theme(
-                data: ThemeData(
-                  primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                  textSelectionTheme: const TextSelectionThemeData(
-                    cursorColor: Color.fromARGB(255, 53, 80, 103),
-                  ),
+              // Deceased Date Picker
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Deceased Date',
+                  suffixIcon: const Icon(Icons.calendar_today),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-                child: TextFormField(
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Born Date',
-                    suffixIcon: const Icon(Icons.calendar_today,
-                        color: Color.fromARGB(255, 53, 80, 103)),
-                    labelStyle: const TextStyle(
-                      color: Color.fromARGB(255, 53, 80, 103),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 53, 80, 103),
-                      ),
-                    ),
-                  ),
-                  readOnly: true,
-                  onTap: () => _selectDate(context, true),
-                  controller: TextEditingController(
-                    text: _bornDate != null
-                        ? '${_bornDate!.toLocal()}'.split(' ')[0]
-                        : '',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Death Date Picker
-              Theme(
-                data: ThemeData(
-                  primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                  textSelectionTheme: const TextSelectionThemeData(
-                    cursorColor: Color.fromARGB(255, 53, 80, 103),
-                  ),
-                ),
-                child: TextFormField(
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Death Date',
-                    suffixIcon: const Icon(Icons.calendar_today,
-                        color: Color.fromARGB(255, 53, 80, 103)),
-                    labelStyle: const TextStyle(
-                      color: Color.fromARGB(255, 53, 80, 103),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 53, 80, 103),
-                      ),
-                    ),
-                  ),
-                  readOnly: true,
-                  onTap: () => _selectDate(context, false),
-                  controller: TextEditingController(
-                    text: _deathDate != null
-                        ? '${_deathDate!.toLocal()}'.split(' ')[0]
-                        : '',
-                  ),
-                ),
+                readOnly: true,
+                onTap: () => _selectDate(context, false),
+                controller: _deceasedDateController,
               ),
               const SizedBox(height: 16),
 
               // Description Field
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Theme(
-                    data: ThemeData(
-                      primaryColor: const Color.fromARGB(255, 53, 80, 103),
-                      textSelectionTheme: const TextSelectionThemeData(
-                        cursorColor: Color.fromARGB(255, 53, 80, 103),
-                      ),
-                    ),
-                    child: TextFormField(
-                      controller: _descriptionController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        labelStyle: const TextStyle(
-                          color: Color.fromARGB(255, 53, 80, 103),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 53, 80, 103),
-                          ),
-                        ),
-                      ),
-                      maxLength: 200,
-                      maxLines: 3,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a description';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _description = value ?? '';
-                      },
+              TextFormField(
+                controller: _descriptionController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                ],
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 53, 80, 103),
+                    ),
+                  ),
+                ),
+                maxLength: 200,
+                maxLines: 3,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _description = value ?? '';
+                },
               ),
               const SizedBox(height: 16),
 
-              // Create Button
-              MyButton(
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Candle Created')),
-                    );
-                  }
-                },
-                buttonText: 'Create Candle',
+              // Submit Button
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: const Text('Create Candle'),
               ),
             ],
           ),

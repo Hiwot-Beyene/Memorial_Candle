@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 ThemeData appTheme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.deepPurple,
-    primary: Colors.deepPurple,
+    seedColor:  const Color.fromARGB(255, 53, 80, 103),
+    primary:  const Color.fromARGB(255, 53, 80, 103),
     secondary: Colors.amber,
     background: Colors.black,
     onBackground: Colors.white,

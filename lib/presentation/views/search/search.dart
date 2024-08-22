@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lightforisrael/data/models/memorial.dart';
 import 'package:lightforisrael/data/services/data_service.dart';
-import 'package:lightforisrael/presentation/views/candles/candles.dart';
+import 'package:lightforisrael/presentation/views/candles/candles.dart'; // Ensure this import points to the correct path
 
 class SearchPage extends StatefulWidget {
   @override
@@ -19,10 +20,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _fetchData() async {
-    final List<dynamic> memorials = await loadJsonData();
+    final List<dynamic> memorials = await loadJsonData(); // Ensure this function is correct
     setState(() {
       _allMemorials = memorials;
-      _filteredMemorials = []; 
+      _filteredMemorials = [];
     });
   }
 
@@ -70,13 +71,15 @@ class _SearchPageState extends State<SearchPage> {
           ),
           Expanded(
             child: _filteredMemorials.isEmpty
-                ? Center(child: Text('Searh by name', style: TextStyle(color: Colors.grey)))
+                ? Center(child: Text('Search by name', style: TextStyle(color: Colors.grey)))
                 : ListView.builder(
                     padding: EdgeInsets.all(8.0),
                     itemCount: _filteredMemorials.length,
                     itemBuilder: (context, index) {
-                      final item = _filteredMemorials[index];
-                      return CandleItemCard(item: item);
+                      final memorial = _filteredMemorials[index];
+                      return CandleItemCard(
+                        memorial: Memorial.fromJson(memorial), // Ensure you have a method to create a Memorial object from JSON
+                      );
                     },
                   ),
           ),
@@ -85,4 +88,3 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
-

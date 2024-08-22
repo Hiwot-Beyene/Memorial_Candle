@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lightforisrael/data/models/memorial.dart';
 import 'package:lightforisrael/presentation/views/candles/details_candle.dart';
 import 'package:lightforisrael/presentation/views/candles/candles.dart';
 
@@ -17,21 +18,20 @@ class CandlesState extends State<Candles> {
     return Navigator(
       key: CandlesNavigatorKey,
       onGenerateRoute: (RouteSettings settings) {
-        final args = settings.arguments as Map<String, dynamic>?; // Extract arguments
+        final args = settings.arguments as Map<String, dynamic>?;
 
         switch (settings.name) {
           case "/detailsCandles":
             if (args != null) {
+              final Memorial memorial = args['memorial']; // Extract Memorial object
               return MaterialPageRoute(
                 settings: settings,
-                builder: (BuildContext context) {
-                  return DetailCandlesView(item: args['item']);
-                },
+                builder: (BuildContext context) => DetailCandlesView(memorial: memorial),
               );
             }
             return MaterialPageRoute(
               settings: settings,
-              builder: (BuildContext context) =>  CandlesView(),
+              builder: (BuildContext context) => CandlesView(),
             );
 
           default:
